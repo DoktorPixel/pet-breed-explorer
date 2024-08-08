@@ -1,20 +1,11 @@
 "use client";
 import { useState } from "react";
 import { useQuery } from "react-query";
-import { dogApi, catApi } from "../lib/axios";
+import { fetchDogBreeds, fetchCatBreeds } from "@/lib/api";
+
 import Link from "next/link";
 import Image from "next/image";
-import { Breed } from "@/types/tupes";
-
-async function fetchDogBreeds(): Promise<Breed[]> {
-  const { data } = await dogApi.get("/breeds");
-  return data;
-}
-
-async function fetchCatBreeds(): Promise<Breed[]> {
-  const { data } = await catApi.get("/breeds");
-  return data;
-}
+import { Breed } from "@/types/types";
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");

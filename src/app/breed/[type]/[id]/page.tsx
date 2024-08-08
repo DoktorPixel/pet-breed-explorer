@@ -4,7 +4,7 @@ import { useQuery } from "react-query";
 import { catApi, dogApi } from "@/lib/axios";
 import { useParams } from "next/navigation";
 import Image from "next/image";
-import { Breed } from "@/types/tupes";
+import { Breed } from "@/types/types";
 import Link from "next/link";
 
 async function fetchBreed(id: string, type: "dog" | "cat"): Promise<Breed> {
