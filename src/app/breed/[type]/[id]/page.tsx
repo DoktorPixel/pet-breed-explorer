@@ -3,9 +3,10 @@
 import { useQuery } from "react-query";
 import { catApi, dogApi } from "@/lib/axios";
 import { useParams } from "next/navigation";
-import Image from "next/image";
+
 import { Breed } from "@/types/types";
 import Link from "next/link";
+import { DynamicImageWithFallback } from "@/components/DynamicImageWithFallback";
 
 async function fetchBreed(id: string, type: "dog" | "cat"): Promise<Breed> {
   const api = type === "dog" ? dogApi : catApi;
@@ -41,15 +42,7 @@ export default function BreedPage() {
   return (
     <div className="container mx-auto p-4 max-w-[1000px]">
       <div className="bg-white shadow-md rounded-lg overflow-hidden">
-        <Image
-          src={`https://cdn2.${
-            type === "dog" ? "thedogapi.com" : "thecatapi.com"
-          }/images/${breed.reference_image_id}.jpg`}
-          alt={breed.name}
-          className="mx-auto w-auto h-auto max-h-[60vh] object-cover"
-          width={500}
-          height={500}
-        />
+        <DynamicImageWithFallback breed={breed} type={type} />
         <div className="p-4 ">
           <h1 className="text-2xl font-bold">{breed.name}</h1>
           <p className="mt-2">{breed.description}</p>

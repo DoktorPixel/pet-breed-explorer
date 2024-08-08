@@ -1,11 +1,12 @@
 "use client";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useQuery } from "react-query";
 import { fetchDogBreeds, fetchCatBreeds } from "@/lib/api";
 
 import Link from "next/link";
 import Image from "next/image";
 import { Breed } from "@/types/types";
+import { ImageWithFallback } from "@/components/ImageWithFallback";
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -18,6 +19,26 @@ export default function Home() {
   const { data: catBreeds, isLoading: isLoadingCats } = useQuery<Breed[]>(
     "catBreeds",
     fetchCatBreeds
+  );
+
+  const filteredDogBreeds = useMemo(
+    () =>
+      shuffle(
+        dogBreeds?.filter((breed: Breed) =>
+          breed.name.toLowerCase().includes(searchQuery.toLowerCase())
+        ) || []
+      ),
+    [dogBreeds, searchQuery]
+  );
+
+  const filteredCatBreeds = useMemo(
+    () =>
+      shuffle(
+        catBreeds?.filter((breed: Breed) =>
+          breed.name.toLowerCase().includes(searchQuery.toLowerCase())
+        ) || []
+      ),
+    [catBreeds, searchQuery]
   );
 
   if (isLoadingDogs || isLoadingCats)
@@ -35,17 +56,6 @@ export default function Home() {
   function shuffle<T>(array: T[]): T[] {
     return array.sort(() => Math.random() - 0.5);
   }
-
-  const filteredDogBreeds = shuffle(
-    dogBreeds?.filter((breed: Breed) =>
-      breed.name.toLowerCase().includes(searchQuery.toLowerCase())
-    ) || []
-  );
-  const filteredCatBreeds = shuffle(
-    catBreeds?.filter((breed: Breed) =>
-      breed.name.toLowerCase().includes(searchQuery.toLowerCase())
-    ) || []
-  );
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
@@ -88,13 +98,10 @@ export default function Home() {
       <div className="container mx-auto p-4 grid grid-cols-1 md:grid-cols-3 gap-4">
         {filteredDogBreeds?.slice(0, 10).map((breed: Breed) => (
           <Link href={`/breed/dog/${breed.id}`} key={breed.id}>
-            <div className="bg-white shadow-md rounded-lg overflow-hidden transform hover:scale-105 hover:shadow-lg transition duration-300 ease-in-out">
-              <Image
-                src={`https://cdn2.thedogapi.com/images/${breed.reference_image_id}.jpg`}
-                alt={breed.name}
-                className="w-full h-64 object-cover"
-                width={500}
-                height={500}
+            <div className="bg-white shadow-md rounded-lg overflow-hidden transform  hover:shadow-xl transition duration-300 ease-in-out">
+              <ImageWithFallback
+                breed={breed}
+                apiBaseUrl="https://cdn2.thedogapi.com/images"
               />
               <div className="p-4">
                 <h3 className="text-lg font-bold">{breed.name}</h3>
@@ -104,13 +111,10 @@ export default function Home() {
         ))}
         {filteredCatBreeds?.slice(0, 10).map((breed: Breed) => (
           <Link href={`/breed/cat/${breed.id}`} key={breed.id}>
-            <div className="bg-white shadow-md rounded-lg overflow-hidden transform hover:scale-105 hover:shadow-lg transition duration-300 ease-in-out">
-              <Image
-                src={`https://cdn2.thecatapi.com/images/${breed.reference_image_id}.jpg`}
-                alt={breed.name}
-                className="w-full h-64 object-cover"
-                width={500}
-                height={500}
+            <div className="bg-white shadow-md rounded-lg overflow-hidden transform hover:shadow-xl transition duration-300 ease-in-out">
+              <ImageWithFallback
+                breed={breed}
+                apiBaseUrl="https://cdn2.thecatapi.com/images"
               />
               <div className="p-4">
                 <h3 className="text-lg font-bold">{breed.name}</h3>
