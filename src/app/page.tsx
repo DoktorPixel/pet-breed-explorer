@@ -2,9 +2,7 @@
 import { useMemo, useState } from "react";
 import { useQuery } from "react-query";
 import { fetchDogBreeds, fetchCatBreeds } from "@/lib/api";
-
 import Link from "next/link";
-import Image from "next/image";
 import { Breed } from "@/types/types";
 import { ImageWithFallback } from "@/components/ImageWithFallback";
 
