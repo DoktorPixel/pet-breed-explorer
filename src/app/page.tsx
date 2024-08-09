@@ -12,11 +12,13 @@ export default function Home() {
 
   const { data: dogBreeds, isLoading: isLoadingDogs } = useQuery<Breed[]>(
     "dogBreeds",
-    fetchDogBreeds
+    fetchDogBreeds,
+    { staleTime: 1000 * 60 * 10 }
   );
   const { data: catBreeds, isLoading: isLoadingCats } = useQuery<Breed[]>(
     "catBreeds",
-    fetchCatBreeds
+    fetchCatBreeds,
+    { staleTime: 1000 * 60 * 10 }
   );
 
   const shuffledDogBreeds = useMemo(
