@@ -19,24 +19,30 @@ export default function Home() {
     fetchCatBreeds
   );
 
+  const shuffledDogBreeds = useMemo(
+    () => shuffle(dogBreeds || []),
+    [dogBreeds]
+  );
+
+  const shuffledCatBreeds = useMemo(
+    () => shuffle(catBreeds || []),
+    [catBreeds]
+  );
+
   const filteredDogBreeds = useMemo(
     () =>
-      shuffle(
-        dogBreeds?.filter((breed: Breed) =>
-          breed.name.toLowerCase().includes(searchQuery.toLowerCase())
-        ) || []
+      shuffledDogBreeds.filter((breed: Breed) =>
+        breed.name.toLowerCase().includes(searchQuery.toLowerCase().trim())
       ),
-    [dogBreeds, searchQuery]
+    [shuffledDogBreeds, searchQuery]
   );
 
   const filteredCatBreeds = useMemo(
     () =>
-      shuffle(
-        catBreeds?.filter((breed: Breed) =>
-          breed.name.toLowerCase().includes(searchQuery.toLowerCase())
-        ) || []
+      shuffledCatBreeds.filter((breed: Breed) =>
+        breed.name.toLowerCase().includes(searchQuery.toLowerCase().trim())
       ),
-    [catBreeds, searchQuery]
+    [shuffledCatBreeds, searchQuery]
   );
 
   if (isLoadingDogs || isLoadingCats)
